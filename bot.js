@@ -25,56 +25,50 @@ function sendText(chat_id, text) {
   UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/', data);
 }
 
-function sendWelcomeMessage(chat_id, username) {
-  let message = "Привет, " + username + "! Я - Лариса, бот-бухгалтер. Я помогу вести учет финансов. Приступим! Введите сумму прихода:";
-  sendText(chat_id, message);
-}
-
-let incomeValue = 0;
-let expendValue = 0;
-
-function sendErrorMessage(chat_id, message) {
-  sendText(chat_id, "Ошибка: " + message + " Введите корректные данные:");
-}
-
-function processIncome(chat_id, text) {
-  let amount = parseFloat(text);
-  if (isNaN(amount)) {
-    sendErrorMessage(chat_id, "вы ввели текст, а не число");
-  } else if (amount < 0) {
-    sendErrorMessage(chat_id, "сумма не может быть меньше 0");
-  } else {
-    incomeValue = amount;
-    sendText(chat_id, "Спасибо, вы указали сумму прихода " + incomeValue + " рублей. Введите сумму расхода:");
-  }
-}
-
-function processExpend(chat_id, text) {
-  let amount = parseFloat(text);
-  if (isNaN(amount)) {
-    sendErrorMessage(chat_id, "вы ввели текст, а не число");
-  } else if (amount < 0) {
-    sendErrorMessage(chat_id, "сумма не может быть меньше 0");
-  } else if (expendValue === 0 && incomeValue !== 0) {
-    expendValue = amount;
-    sendText(chat_id, "Спасибо, вы указали сумму расхода " + expendValue + " рублей. Введите комментарий:");
-  }
-}
-
 function doPost(e) {
   let contents = JSON.parse(e.postData.contents);
   let chat_id = contents.message.chat.id;
   let text = contents.message.text;
-
+  let username = contents.message.from.username;
+  let timestamp = new Date().toLocaleString();  // Получение текущей даты и времени
+  
+  let sheet = table.getSheetByName("Messages");
+  
   if (text === "/start") {
-    let username = contents.message.from.username;
-    sendWelcomeMessage(chat_id, username);
-  } else if (incomeValue === 0) {
-    processIncome(chat_id, text);
-  } else if (expendValue === 0) {
-    processExpend(chat_id, text);
+    let welcomeMessage = `Привет, ${username}! Я - Лариса, бот-бухгалтер. Я помогу вести учет финансов. Приступим, введите сумму прихода:`;
+    sendText(chat_id, welcomeMessage);
+  }
+  else if (!isNaN(parseFloat(text)) && isFinite(text)) {  // Проверка, является ли введенное значение числом
+    let incomeValue = parseFloat(text);
+    
+    if (incomeValue >= 0) {  // Проверка, что число больше или равно нулю
+      // Запрос суммы расхода
+      sendText(chat_id, `Сумма прихода в размере ${incomeValue} рублей записана. Введите сумму расхода:`);
+      
+      // Установка временной переменной для хранения значения суммы расхода
+      table.getRange("Temp!A1").setValue("expendValue");
+      
+    } else {
+      sendText(chat_id, "Введенное значение должно быть больше или равно нулю. Попробуйте еще раз.");
+    }    
+  } else if (text === "expendValue") {
+    let expendValue = parseFloat(text);  // Получение значения суммы расхода
+    
+    if (expendValue >= 0) {  // Проверка, что число больше или равно нулю
+      let incomeValue = table.getRange("Temp!A1").getValue();  // Получение значения суммы прихода из временной переменной
+      
+      sheet.appendRow([timestamp, username, incomeValue, expendValue]);
+      sendText(chat_id, `Сумма расхода в размере ${expendValue} рублей записана.`);
+
+      // Очистка временной переменной
+      table.getRange("Temp!A1").clearContent();
+      
+      // Запрос следующего значения
+      sendText(chat_id, "Введите следующую сумму прихода:");
+    } else {
+      sendText(chat_id, "Введенное значение должно быть больше или равно нулю. Попробуйте еще раз.");
+    } 
   } else {
-    sendText(chat_id, text);
-    table.getSheetByName("Messages").appendRow([chat_id, text]);
+    sendText(chat_id, "Введенное значение должно быть числом. Попробуйте еще раз.");
   }
 }
