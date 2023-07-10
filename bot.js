@@ -55,7 +55,7 @@ function processExpend(chat_id, text) {
     sendErrorMessage(chat_id, "вы ввели текст, а не число");
   } else if (amount < 0) {
     sendErrorMessage(chat_id, "сумма не может быть меньше 0");
-  } else {
+  } else if (incomeValue !== 0) {
     expendValue = amount;
     sendText(chat_id, "Спасибо, вы указали сумму расхода " + expendValue + " рублей. Введите комментарий:");
   }
