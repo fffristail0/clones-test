@@ -1,0 +1,229 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+    height: 100vh;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow:  0px 5px 25px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.container form{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+::placeholder{
+    font-size: 16px;
+}
+
+/* стили для алерта добавления / редактирования записи */
+@keyframes slideIn {
+    from {
+        top: -50px;
+        opacity: 0;
+    }
+    to {
+        top: 20px;
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        top: 20px;
+        opacity: 1;
+    }
+    to {
+        top: -50px;
+        opacity: 0;
+    }
+}
+
+.alert {
+    display: none;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    animation: slideIn 0.5s ease-out;
+}
+
+.alert.hide {
+    animation: slideOut 0.5s ease-out;
+}
+/* конец стилей для алерта */
+
+.clone-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clone-table th, .clone-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.clone-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.clone-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.clone-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.clone-table a {
+    color: #007bff; /* Синий цвет */
+    text-decoration: none; /* Убираем подчёркивание */
+}
+
+.clone-table a:hover {
+    text-decoration: underline; /* Подчёркивание при наведении */
+}
+
+.delete-button {
+    background-color: #ff4d4d; /* Красный цвет */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-button:hover {
+    background-color: #cc0000; /* Тёмно-красный при наведении */
+}
+
+/* Общие стили для всех модальных окон */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    overflow-y: auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-modal:hover {
+    color: #000;
+}
+
+/* Стили для модального окна подтверждения удаления */
+.delete-modal-content {
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.delete-modal-content p {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.delete-modal-content .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete-modal-content button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Стили для контейнера кнопок */
+.actions-container {
+    display: flex;
+    gap: 8px; /* Расстояние между кнопками */
+    justify-content: flex-start; /* Выравниваем кнопки по правому краю */
+}
+
+/* Общие стили для кнопок */
+.edit-button, .delete-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Стили для кнопки редактирования */
+.edit-button {
+    background-color: #4CAF50; /* Зелёный цвет */
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #45a049; /* Тёмно-зелёный при наведении */
+}
+
+/* Стили для кнопки удаления */
+.delete-button {
+    background-color: #ff4d4d; /* Красный цвет */
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #cc0000; /* Тёмно-красный при наведении */
+}
